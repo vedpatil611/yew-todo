@@ -1,3 +1,6 @@
+mod counter;
+
+use crate::counter::Counter;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
@@ -49,7 +52,7 @@ impl Component for Model {
             <div>
                 <button onclick=self.link.callback(|_| Msg::AddOne)>{ "+1" }</button>
                 <button onclick=self.link.callback(|_| Msg::SubtractOne)>{ "-1" }</button>
-                <p>{ self.value }</p>
+                <Counter count={self.value}/>
             </div>
         }
     }
