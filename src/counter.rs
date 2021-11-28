@@ -7,7 +7,7 @@ pub struct Counter {
 
 #[derive(Debug, Clone, Properties)]
 pub struct Props {
-    pub count: i64
+    pub children: Children
 }
 
 impl Component for Counter {
@@ -32,8 +32,8 @@ impl Component for Counter {
 
     fn view(&self) -> Html {
         html! {
-            <div>
-                <p>{ "Count: " }{ self.props.count }</p>
+            <div style="color: blue;">
+                <p>{ "Count: " }{ self.props.children.clone() }</p>
             </div>
         }
     }

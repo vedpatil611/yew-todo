@@ -52,7 +52,9 @@ impl Component for Model {
             <div>
                 <button onclick=self.link.callback(|_| Msg::AddOne)>{ "+1" }</button>
                 <button onclick=self.link.callback(|_| Msg::SubtractOne)>{ "-1" }</button>
-                <Counter count={self.value}/>
+                <Counter>
+                    <p>{ self.value }</p>
+                </Counter>
             </div>
         }
     }
