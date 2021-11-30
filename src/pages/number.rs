@@ -17,7 +17,7 @@ impl Component for Number {
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             props,
-            link
+            link,
         }
     }
 
