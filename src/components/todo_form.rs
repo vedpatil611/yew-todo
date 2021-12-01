@@ -47,6 +47,13 @@ impl Component for TodoForm {
                         text: self.input.clone()
                     });
                 }
+
+                unsafe {
+                    for x in todos_ref.borrow().iter() {
+                        crate::log(x.text.as_str());
+                    };
+                }
+
                 true
             }
             _ => { false },
