@@ -4,14 +4,12 @@ use std::cell::RefCell;
 use yew::prelude::*;
 use crate::components::todo_form::TodoForm;
 
-#[derive(Clone)]
-pub struct TodoModal {
-    pub text: String
-}
+use super::todo::Todo;
+use super::todo::TodoData;
 
 pub struct TodoList {
     _link: ComponentLink<Self>,
-    todos: Rc<RefCell<Vec<TodoModal>>>
+    todos: Rc<RefCell<Vec<TodoData>>>
 }
 
 pub enum TodoListMsg {
@@ -41,7 +39,8 @@ impl Component for TodoList {
         html! {
             <div>
                 <h1>{"Plan for today"}</h1>
-                <TodoForm todos={Rc::clone(&self.todos)}/>
+                <TodoForm todos={Rc::clone(&self.todos)} />
+                <Todo todos={self.todos.clone()} />
             </div>
         }
     }

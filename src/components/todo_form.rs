@@ -3,7 +3,7 @@ use std::cell::RefCell;
 
 use yew::prelude::*;
 
-use super::todo_list::TodoModal;
+use super::todo::TodoData;
 
 pub struct TodoForm {
     link: ComponentLink<Self>,
@@ -19,7 +19,7 @@ pub enum TodoFormMsg {
 
 #[derive(Clone, Properties)]
 pub struct TodoFormProps {
-    pub todos: Rc<RefCell<Vec<TodoModal>>>,
+    pub todos: Rc<RefCell<Vec<TodoData>>>,
 }
 
 impl Component for TodoForm {
@@ -43,16 +43,16 @@ impl Component for TodoForm {
             TodoFormMsg::SubmitData => {
                 let todos_ref = Rc::clone(&self.props.todos);
                 {
-                    todos_ref.borrow_mut().push(TodoModal {
-                        text: self.input.clone()
+                    todos_ref.borrow_mut().push(TodoData {
+                        id: 0,
+                        text: self.input.clone(),
+                        is_complete: false
                     });
                 }
 
-                unsafe {
-                    for x in todos_ref.borrow().iter() {
-                        crate::log(x.text.as_str());
-                    };
-                }
+                for x in todos_ref.borrow().iter() {
+                    crate::console_log(x.text.as_str());
+                };
 
                 true
             }
