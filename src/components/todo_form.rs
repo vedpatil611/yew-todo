@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::rc::Rc;
 use std::cell::RefCell;
 
@@ -19,7 +20,7 @@ pub enum TodoFormMsg {
 
 #[derive(Clone, Properties)]
 pub struct TodoFormProps {
-    pub todos: Rc<RefCell<Vec<TodoData>>>,
+    pub todos: Rc<RefCell<VecDeque<TodoData>>>,
 }
 
 impl Component for TodoForm {
@@ -43,7 +44,7 @@ impl Component for TodoForm {
             TodoFormMsg::SubmitData => {
                 let todos_ref = Rc::clone(&self.props.todos);
                 {
-                    todos_ref.borrow_mut().push(TodoData {
+                    todos_ref.borrow_mut().push_front(TodoData {
                         id: 0,
                         text: self.input.clone(),
                         is_complete: false

@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::rc::Rc; 
 use std::cell::RefCell;
 
@@ -28,7 +29,7 @@ pub struct Todo {
 
 #[derive(Clone, Properties)]
 pub struct TodoProps {
-    pub todos: Rc<RefCell<Vec<TodoData>>>,
+    pub todos: Rc<RefCell<VecDeque<TodoData>>>,
     //pub complete_todo: fn(usize)
 }
 
@@ -53,16 +54,18 @@ impl Component for Todo {
             TodoMessage::CompleteTodo(id) => {
                 let old_todos_ref = Rc::clone(&self.props.todos);
 
-                let mut updated_todos: Vec<TodoData> = Vec::new();
+                let mut updated_todos: VecDeque<TodoData> = VecDeque::new();
                 for todo in old_todos_ref.borrow().iter() {
-                    updated_todos.push(todo.clone());
-                    if updated_todos.last().unwrap().id == id {
-                        updated_todos.last_mut().unwrap().toggle_complete();
+                    updated_todos.push_back(todo.clone());
+                    if updated_todos[updated_todos.len() - 1].id == id {
+                        let mut last = updated_todos.pop_back().unwrap();
+                        last.toggle_complete();
+                        updated_todos.push_back(last);
                     }
                 }
 
                 old_todos_ref.swap(&RefCell::new(updated_todos));
-                false
+                true
             },
         }
     }

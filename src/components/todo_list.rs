@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::rc::Rc;
 use std::cell::RefCell;
 
@@ -9,7 +10,7 @@ use super::todo::TodoData;
 
 pub struct TodoList {
     _link: ComponentLink<Self>,
-    todos: Rc<RefCell<Vec<TodoData>>>
+    todos: Rc<RefCell<VecDeque<TodoData>>>
 }
 
 pub enum TodoListMsg {
@@ -23,7 +24,7 @@ impl Component for TodoList {
     fn create(_props: Self::Properties, _link: ComponentLink<Self>) -> Self {
         Self {
             _link,
-            todos: Rc::new(RefCell::new(Vec::new()))
+            todos: Rc::new(RefCell::new(VecDeque::new()))
         }
     }
     
