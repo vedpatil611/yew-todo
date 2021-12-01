@@ -1,24 +1,36 @@
+use std::rc::Rc;
+use std::cell::RefCell;
+
 use yew::prelude::*;
+
+use super::todo_list::TodoModal;
 
 pub struct TodoForm {
     link: ComponentLink<Self>,
-    input: String
+    input: String,
+    props: TodoFormProps
 }
 
 pub enum TodoFormMsg {
     TextChange(String),
-    SubmitData(String),
+    SubmitData,
     SubmitNone,
+}
+
+#[derive(Clone, Properties)]
+pub struct TodoFormProps {
+    pub todos: Rc<RefCell<Vec<TodoModal>>>,
 }
 
 impl Component for TodoForm {
     type Message = TodoFormMsg;
-    type Properties = ();
+    type Properties = TodoFormProps;
     
-    fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             link,
-            input: String::new()
+            input: String::new(),
+            props
         }
     }
 
@@ -28,8 +40,13 @@ impl Component for TodoForm {
                 self.input = data;
                 false
             },
-            TodoFormMsg::SubmitData(data) => {
-                self.input = data;
+            TodoFormMsg::SubmitData => {
+                let todos_ref = Rc::clone(&self.props.todos);
+                {
+                    todos_ref.borrow_mut().push(TodoModal {
+                        text: self.input.clone()
+                    });
+                }
                 true
             }
             _ => { false },
@@ -43,7 +60,14 @@ impl Component for TodoForm {
     fn view(&self) -> Html {
         let handle_submit = self.link.callback(|e: FocusEvent| { 
             e.prevent_default();
-            Self::Message::SubmitData(String::from(""))
+            
+            //let todos = self.props.todos.borrow_mut();
+
+            //self.props.onsubmit(TodoModal {
+                //text: String::from("")
+            //});
+
+            Self::Message::SubmitData
         });
 
         let handle_change = self.link.callback(|e: yew::html::ChangeData| {

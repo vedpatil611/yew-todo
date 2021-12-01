@@ -1,6 +1,4 @@
-use crate::app_router::{ Link, AppRoute };
-use crate::components::todo_form::TodoForm;
-use crate::components::counter::Counter;
+use crate::components::todo_list::TodoList;
 use yew::prelude::*;
 
 pub struct Home {
@@ -28,7 +26,7 @@ impl Component for Home {
     fn view(&self) -> Html {
         html! {
             <div>
-                <TodoForm />
+                <TodoList />
             </div>
         }
     }
