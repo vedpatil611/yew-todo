@@ -48,11 +48,7 @@ impl Component for TodoForm {
         let data = self.input.clone();
         let handle_submit = self.link.callback(move |e: FocusEvent| {
             e.prevent_default();
-            TodoListMsg::SubmitTodo(TodoData {
-                id: 0,
-                text: data.clone(),
-                is_complete: false
-            })
+            TodoListMsg::SubmitTodo(TodoData::new(data.clone()))
         });
 
         let handle_change = self.self_link.callback(|e: yew::html::ChangeData| {

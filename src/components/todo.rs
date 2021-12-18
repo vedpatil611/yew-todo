@@ -11,7 +11,22 @@ pub struct TodoData {
     pub is_complete: bool
 }
 
+static mut ID_PROVIDER: usize = 0;
+
 impl TodoData {
+    pub fn new(text: String) -> TodoData {
+        let id = unsafe {
+            ID_PROVIDER += 1;
+            ID_PROVIDER
+        };
+
+        TodoData {
+            id,
+            text,
+            is_complete: false
+        }
+    }
+
     pub fn is_complete(&self) -> bool {
         false
     }
