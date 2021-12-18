@@ -10,11 +10,11 @@ use super::todo::TodoData;
 
 pub struct TodoList {
     _link: ComponentLink<Self>,
-    todos: Rc<RefCell<VecDeque<TodoData>>>
+    todos: VecDeque<TodoData>,
 }
 
 pub enum TodoListMsg {
-    SubmitTodo
+    SubmitTodo(TodoData)
 }
 
 impl Component for TodoList {
@@ -24,23 +24,28 @@ impl Component for TodoList {
     fn create(_props: Self::Properties, _link: ComponentLink<Self>) -> Self {
         Self {
             _link,
-            todos: Rc::new(RefCell::new(VecDeque::new()))
+            todos: VecDeque::new(),
         }
     }
     
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        false
+        true
     }
 
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
-        false
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            TodoListMsg::SubmitTodo(todo) => {
+                self.todos.push_front(todo)
+            }
+        }
+        true
     }
 
     fn view(&self) -> Html {
         html! {
             <div>
                 <h1>{"Plan for today"}</h1>
-                <TodoForm todos={Rc::clone(&self.todos)} />
+                <TodoForm />
                 <Todo todos={self.todos.clone()} />
             </div>
         }

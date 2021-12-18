@@ -1,8 +1,8 @@
 use std::collections::VecDeque;
-use std::rc::Rc; 
-use std::cell::RefCell;
 
 use yew::prelude::*;
+use yew_feather::edit::Edit;
+use yew_feather::x_circle::XCircle;
 
 #[derive(Clone)]
 pub struct TodoData {
@@ -29,8 +29,7 @@ pub struct Todo {
 
 #[derive(Clone, Properties)]
 pub struct TodoProps {
-    pub todos: Rc<RefCell<VecDeque<TodoData>>>,
-    //pub complete_todo: fn(usize)
+    pub todos: VecDeque<TodoData>,
 }
 
 pub enum TodoMessage {
@@ -52,38 +51,37 @@ impl Component for Todo {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             TodoMessage::CompleteTodo(id) => {
-                let old_todos_ref = Rc::clone(&self.props.todos);
-
-                let mut updated_todos: VecDeque<TodoData> = VecDeque::new();
-                for todo in old_todos_ref.borrow().iter() {
+                let mut updated_todos = VecDeque::new();
+                for todo in self.props.todos.iter() {
                     updated_todos.push_back(todo.clone());
-                    if updated_todos[updated_todos.len() - 1].id == id {
-                        let mut last = updated_todos.pop_back().unwrap();
+                    let last = updated_todos.back_mut().unwrap();
+                    if last.id == id {
                         last.toggle_complete();
-                        updated_todos.push_back(last);
                     }
                 }
 
-                old_todos_ref.swap(&RefCell::new(updated_todos));
                 true
             },
         }
     }
 
-    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        false
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        self.props = props;
+        true
     }
 
     fn view(&self) -> Html {
-        let todo_ref = Rc::clone(&self.props.todos);
- 
         let mut html_list = Vec::new();
-        for (i, todo) in todo_ref.borrow().iter().enumerate() {
+        for (i, todo) in self.props.todos.iter().enumerate() {
             let id: usize = todo.id;
             html_list.push(html! {
                 <div class=classes!(if todo.is_complete() { "todo-row complete" } else { "todo-row" }) key={i}>
                     <div key={id} onclick={self.link.callback(move |_| TodoMessage::CompleteTodo(id))}>
                         { todo.text.clone().as_str() }
+                    </div>
+                    <div>
+                        <XCircle />
+                        <Edit />
                     </div>
                 </div>
             });

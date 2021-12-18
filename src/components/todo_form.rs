@@ -1,37 +1,33 @@
-use std::collections::VecDeque;
-use std::rc::Rc;
-use std::cell::RefCell;
-
 use yew::prelude::*;
 
-use super::todo::TodoData;
+use crate::components::todo_list::TodoListMsg;
+use crate::console_log;
+
+use super::todo::TodoData; 
+use super::todo_list::TodoList;
 
 pub struct TodoForm {
-    link: ComponentLink<Self>,
+    self_link: ComponentLink<Self>,
+    link: ComponentLink<TodoList>,
     input: String,
-    props: TodoFormProps
 }
 
 pub enum TodoFormMsg {
     TextChange(String),
-    SubmitData,
     SubmitNone,
-}
-
-#[derive(Clone, Properties)]
-pub struct TodoFormProps {
-    pub todos: Rc<RefCell<VecDeque<TodoData>>>,
 }
 
 impl Component for TodoForm {
     type Message = TodoFormMsg;
-    type Properties = TodoFormProps;
+    type Properties = ();
     
-    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let self_link = link.clone();
+        let parent_scope = link.get_parent().unwrap();
         Self {
-            link,
+            self_link,
+            link: parent_scope.to_owned().downcast::<TodoList>(),
             input: String::new(),
-            props
         }
     }
 
@@ -39,55 +35,38 @@ impl Component for TodoForm {
         match msg {
             TodoFormMsg::TextChange(data) => {
                 self.input = data;
-                false
-            },
-            TodoFormMsg::SubmitData => {
-                let todos_ref = Rc::clone(&self.props.todos);
-                {
-                    todos_ref.borrow_mut().push_front(TodoData {
-                        id: 0,
-                        text: self.input.clone(),
-                        is_complete: false
-                    });
-                }
-
-                for x in todos_ref.borrow().iter() {
-                    crate::console_log(x.text.as_str());
-                };
-
                 true
-            }
+            },
             _ => { false },
         }
     }
 
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        false
+        true
     }
 
     fn view(&self) -> Html {
-        let handle_submit = self.link.callback(|e: FocusEvent| { 
+        let data = self.input.clone();
+        let handle_submit = self.link.callback(move |e: FocusEvent| {
             e.prevent_default();
-            
-            //let todos = self.props.todos.borrow_mut();
-
-            //self.props.onsubmit(TodoModal {
-                //text: String::from("")
-            //});
-
-            Self::Message::SubmitData
+            TodoListMsg::SubmitTodo(TodoData {
+                id: 0,
+                text: data.clone(),
+                is_complete: false
+            })
         });
 
-        let handle_change = self.link.callback(|e: yew::html::ChangeData| {
+        let handle_change = self.self_link.callback(|e: yew::html::ChangeData| {
             match e {
                 ChangeData::Value(data) => { Self::Message::TextChange(data) },
                 _ => { Self::Message::SubmitNone }
             }
         });
 
+
         html! {
             <form class=classes!("todo-form") onsubmit={handle_submit}>
-                <input type="text" placeholder="Add a todo" value={self.input.clone()} name={"text"} class=classes!("todo-input") onchange={handle_change}/>
+                <input type="text" placeholder="Add a todo" name={"text"} class=classes!("todo-input") onchange={handle_change}/>
                 <button class=classes!("todo-button")>{"Add Todo"}</button>
             </form>
         }
