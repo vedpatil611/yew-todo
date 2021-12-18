@@ -23,7 +23,7 @@ impl TodoData {
 
 pub struct Todo {
     link: ComponentLink<Self>,
-    edit: String,
+    _edit: String,
     props: TodoProps
 }
 
@@ -43,7 +43,7 @@ impl Component for Todo {
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             link,
-            edit: String::new(),
+            _edit: String::new(),
             props
         }
     }

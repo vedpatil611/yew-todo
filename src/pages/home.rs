@@ -1,21 +1,21 @@
-use crate::components::todo_list::TodoList;
 use yew::prelude::*;
+use crate::components::TodoList;
 
 pub struct Home {
-    link: ComponentLink<Self>,
+    _link: ComponentLink<Self>,
 }
 
 impl Component for Home {
     type Message = ();
     type Properties = ();
 
-    fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(_props: Self::Properties, _link: ComponentLink<Self>) -> Self {
         Self {
-            link,
+            _link,
         }
     }
 
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
         false
     }
 

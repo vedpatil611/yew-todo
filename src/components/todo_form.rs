@@ -1,7 +1,6 @@
 use yew::prelude::*;
 
 use crate::components::todo_list::TodoListMsg;
-use crate::console_log;
 
 use super::todo::TodoData; 
 use super::todo_list::TodoList;

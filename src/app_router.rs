@@ -7,8 +7,8 @@ pub struct AppRouter {}
 
 #[derive(Switch, Clone)]
 pub enum AppRoute {
-    #[to = "/number/{num}"]
-    Number(i64),
+    //#[to = "/number/{num}"]
+    //Number(i64),
     #[to = "/"]
     Index,
 }
@@ -34,7 +34,6 @@ impl Component for AppRouter {
     fn view(&self) -> Html {
         let render_func = Router::render(|route: AppRoute| match route {
             AppRoute::Index => html! { < pages::Home /> },
-            AppRoute::Number(num) => html! { < pages::Number num={num}/> }
         });
 
         html! {
