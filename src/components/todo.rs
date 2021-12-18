@@ -86,6 +86,10 @@ impl Component for Todo {
     }
 
     fn view(&self) -> Html {
+        let _remove_todo = self.link.callback(|e: Event| {
+            Self::Message::CompleteTodo(0)
+        });
+
         let mut html_list = Vec::new();
         for (i, todo) in self.props.todos.iter().enumerate() {
             let id: usize = todo.id;
@@ -94,9 +98,9 @@ impl Component for Todo {
                     <div key={id} onclick={self.link.callback(move |_| TodoMessage::CompleteTodo(id))}>
                         { todo.text.clone().as_str() }
                     </div>
-                    <div>
-                        <XCircle />
-                        <Edit />
+                    <div class=classes!("icons")>
+                        <XCircle size=20/>
+                        <Edit size=20/>
                     </div>
                 </div>
             });
