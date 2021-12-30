@@ -86,7 +86,7 @@ impl Component for Todo {
     }
 
     fn view(&self) -> Html {
-        let _remove_todo = self.link.callback(|e: Event| {
+        let _remove_todo = self.link.callback(|_e: Event| {
             Self::Message::CompleteTodo(0)
         });
 
@@ -99,8 +99,8 @@ impl Component for Todo {
                         { todo.text.clone().as_str() }
                     </div>
                     <div class=classes!("icons")>
-                        <XCircle size=20/>
-                        <Edit size=20/>
+                        <XCircle size=20 />
+                        <Edit size=20 />
                     </div>
                 </div>
             });
